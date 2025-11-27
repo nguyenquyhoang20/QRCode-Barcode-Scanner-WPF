@@ -190,7 +190,7 @@ namespace QRBarcodeScanner.ViewModels
                         ((RelayCommand)ClearHistoryCommand).RaiseCanExecuteChanged();
                         ((RelayCommand)CopyResultCommand).RaiseCanExecuteChanged();
 
-                        // Phát âm thanh (optional)
+                        // Phát âm thanh
                         System.Media.SystemSounds.Beep.Play();
                     });
                 }
