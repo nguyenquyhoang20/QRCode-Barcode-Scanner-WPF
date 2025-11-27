@@ -1,0 +1,289 @@
+﻿<Window x:Class="QRBarcodeScanner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:QRBarcodeScanner.ViewModels"
+        Title="Máy Quét QR Code &amp; Barcode" 
+        Height="700" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}">
+    
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="0,0,0,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="🎯 Máy Quét QR Code &amp; Barcode" 
+                               Style="{StaticResource HeaderText}"/>
+                    <TextBlock Text="Hỗ trợ đa định dạng: QR Code, Code128, EAN13, UPC, DataMatrix..." 
+                               Style="{StaticResource SubHeaderText}"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="📊 Tổng số lần quét: " 
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="14"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding TotalScans}" 
+                               Foreground="{StaticResource SuccessBrush}"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Margin="5,0,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Camera View -->
+            <Border Grid.Column="0" Style="{StaticResource CardBorder}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Camera Title -->
+                    <TextBlock Grid.Row="0" 
+                               Text="📹 Camera Preview" 
+                               Style="{StaticResource HeaderText}"
+                               FontSize="18"
+                               Margin="0,0,0,15"/>
+
+                    <!-- Camera Display -->
+                    <Border Grid.Row="1" 
+                            Background="#1E293B"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="2"
+                            CornerRadius="8">
+                        <Grid>
+                            <Image Source="{Binding CurrentFrame}" 
+                                   Stretch="Uniform"
+                                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                            
+                            <!-- Placeholder when camera is off -->
+                            <StackPanel VerticalAlignment="Center" 
+                                        HorizontalAlignment="Center"
+                                        Visibility="{Binding CurrentFrame, Converter={StaticResource NullToVisibilityConverter}}">
+                                <TextBlock Text="📷" 
+                                           FontSize="72"
+                                           HorizontalAlignment="Center"
+                                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="Camera chưa khởi động" 
+                                           FontSize="16"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Control Buttons -->
+                    <StackPanel Grid.Row="2" 
+                                Orientation="Horizontal" 
+                                HorizontalAlignment="Center"
+                                Margin="0,15,0,0">
+                        <Button Content="▶️ Bắt đầu quét" 
+                                Style="{StaticResource ModernButton}"
+                                Command="{Binding StartScanCommand}"
+                                Width="150"
+                                Margin="0,0,10,0"/>
+                        <Button Content="⏹️ Dừng quét" 
+                                Style="{StaticResource ModernButton}"
+                                Command="{Binding StopScanCommand}"
+                                Background="#EF4444"
+                                Width="150"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Results Panel -->
+            <Border Grid.Column="2" Style="{StaticResource CardBorder}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Results Title -->
+                    <TextBlock Grid.Row="0" 
+                               Text="📋 Kết quả quét" 
+                               Style="{StaticResource HeaderText}"
+                               FontSize="18"
+                               Margin="0,0,0,15"/>
+
+                    <!-- Last Result -->
+                    <Border Grid.Row="1" 
+                            Background="#1E293B"
+                            BorderBrush="{StaticResource SuccessBrush}"
+                            BorderThickness="2"
+                            CornerRadius="8"
+                            Padding="15"
+                            Margin="0,0,0,15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Text="Kết quả mới nhất:"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       FontSize="12"
+                                       Margin="0,0,0,5"/>
+
+                            <TextBlock Grid.Row="1" 
+                                       Text="{Binding LastScanResult.Content, FallbackValue='Chưa có dữ liệu'}"
+                                       Foreground="{StaticResource TextBrush}"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,5"/>
+
+                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                <TextBlock Text="{Binding LastScanResult.BarcodeFormat, FallbackValue=''}"
+                                           Foreground="{StaticResource SuccessBrush}"
+                                           FontSize="11"
+                                           FontWeight="SemiBold"/>
+                                <Button Content="📋 Copy" 
+                                        Command="{Binding CopyResultCommand}"
+                                        Background="Transparent"
+                                        Foreground="{StaticResource PrimaryBrush}"
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        Margin="10,0,0,0"
+                                        Padding="5,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- History List -->
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" 
+                                   Text="📜 Lịch sử quét"
+                                   Foreground="{StaticResource TextBrush}"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,10"/>
+
+                        <ListBox Grid.Row="1"
+                                 ItemsSource="{Binding ScanHistory}"
+                                 Style="{StaticResource ModernListBox}"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#1E293B" 
+                                            CornerRadius="6" 
+                                            Padding="10" 
+                                            Margin="0,0,0,5">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0" 
+                                                       Text="{Binding Content}"
+                                                       Foreground="{StaticResource TextBrush}"
+                                                       FontSize="12"
+                                                       TextWrapping="Wrap"
+                                                       FontWeight="SemiBold"/>
+
+                                            <StackPanel Grid.Row="1" 
+                                                        Orientation="Horizontal" 
+                                                        Margin="0,5,0,0">
+                                                <TextBlock Text="{Binding BarcodeFormat}"
+                                                           Foreground="{StaticResource AccentBrush}"
+                                                           FontSize="10"/>
+                                                <TextBlock Text=" • "
+                                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                                           FontSize="10"/>
+                                                <TextBlock Text="{Binding ScanTime, StringFormat='HH:mm:ss'}"
+                                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                                           FontSize="10"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+
+                    <!-- Clear Button -->
+                    <Button Grid.Row="3" 
+                            Content="🗑️ Xóa lịch sử" 
+                            Style="{StaticResource ModernButton}"
+                            Command="{Binding ClearHistoryCommand}"
+                            Background="#EF4444"
+                            Margin="0,15,0,0"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" 
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="15,10"
+                Margin="0,20,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Ellipse Grid.Column="0" 
+                         Width="10" Height="10" 
+                         Fill="{Binding IsScanning, Converter={StaticResource BoolToColorConverter}}"
+                         VerticalAlignment="Center"
+                         Margin="0,0,10,0"/>
+
+                <TextBlock Grid.Column="1" 
+                           Text="{Binding StatusMessage}"
+                           Foreground="{StaticResource TextBrush}"
+                           FontSize="13"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="2" 
+                           Text="Powered by OpenCvSharp &amp; ZXing.NET"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           FontSize="11"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

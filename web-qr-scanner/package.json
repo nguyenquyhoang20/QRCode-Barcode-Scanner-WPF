@@ -1,0 +1,24 @@
+{
+  "name": "web-qr-scanner",
+  "version": "1.0.0",
+  "description": "Web-based QR and Barcode Scanner",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "qr-scanner",
+    "barcode-scanner",
+    "web-app"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

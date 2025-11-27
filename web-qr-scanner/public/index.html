@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quét QR Code và Barcode trực tuyến">
+    <title>QR & Barcode Scanner</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <rect x="24" y="2" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <rect x="2" y="24" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <rect x="24" y="24" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="9" cy="9" r="2" fill="currentColor"/>
+                    <circle cx="31" cy="9" r="2" fill="currentColor"/>
+                    <circle cx="9" cy="31" r="2" fill="currentColor"/>
+                </svg>
+                <h1>QR & Barcode Scanner</h1>
+            </div>
+            <p class="subtitle">Quét mã QR và Barcode trực tuyến</p>
+        </header>
+
+        <!-- Scanner Section -->
+        <section class="scanner-section">
+            <div class="scanner-container">
+                <div id="reader"></div>
+                <div id="scanner-status" class="scanner-status">
+                    <span class="status-icon">📷</span>
+                    <span class="status-text">Nhấn "Bắt đầu quét" để sử dụng camera</span>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="startBtn" class="btn btn-primary">
+                    <span class="btn-icon">▶</span>
+                    Bắt đầu quét
+                </button>
+                <button id="stopBtn" class="btn btn-secondary" style="display: none;">
+                    <span class="btn-icon">⏸</span>
+                    Dừng quét
+                </button>
+            </div>
+        </section>
+
+        <!-- Result Section -->
+        <section id="resultSection" class="result-section" style="display: none;">
+            <div class="result-card">
+                <div class="result-header">
+                    <h3>Kết quả quét</h3>
+                    <span id="resultFormat" class="format-badge">QR Code</span>
+                </div>
+                <div class="result-content">
+                    <p id="resultText" class="result-text"></p>
+                    <button id="copyBtn" class="btn btn-copy">
+                        <span class="btn-icon">📋</span>
+                        Copy
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section class="history-section">
+            <div class="history-header">
+                <h3>Lịch sử quét</h3>
+                <button id="clearHistoryBtn" class="btn btn-clear">
+                    <span class="btn-icon">🗑️</span>
+                    Xóa tất cả
+                </button>
+            </div>
+            <div id="historyList" class="history-list">
+                <div class="empty-state">
+                    <span class="empty-icon">📝</span>
+                    <p>Chưa có lịch sử quét</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="/js/scanner.js"></script>
+</body>
+</html>
